@@ -1,29 +1,21 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { Navigation } from 'react-native-navigation';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import AuthScreen from './src/screens/Auth/Auth';
+import FeedScreen from './src/screens/Feed/Feed';
+import SideMenu from './src/screens/SideMenu/SideMenu';
+import SideMenuButton from './src/screens/CustomTopBarButtons/SideMenuButton';
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Project Cappo begins!</Text>
-        <Icon size={30} name="map" color="red" />
-      </View>
-    );
-  }
-}
+Navigation.registerComponent('cappo.AuthScreen', () => AuthScreen);
+Navigation.registerComponent('cappo.FeedScreen', () => FeedScreen);
+Navigation.registerComponent('cappo.SideMenu', () => SideMenu);
+Navigation.registerComponent('cappo.SideMenuButton', () => SideMenuButton);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  }
+Navigation.events().registerAppLaunchedListener(() => {
+  Navigation.setRoot({
+    root: {
+      component: {
+        name: "cappo.AuthScreen"
+      }
+    }
+  });
 });
