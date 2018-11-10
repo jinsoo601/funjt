@@ -17,7 +17,7 @@ const reducer = (state = initialState, action) => {
 		case ADD_TRANSACTION:
 			return {
 				...state,
-				transactions: state.transactions.unshift(action.transaction)
+				transactions: state.transactions.concat(action.transaction)
 			};
 		default:
 			return state;

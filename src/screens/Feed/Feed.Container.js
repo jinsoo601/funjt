@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Navigation } from 'react-native-navigation';
 import { Provider } from 'react-redux';
 
-import openSideMenu from '../CustomTopBarButtons/openSideMenu';
+import { THEME_WHITE } from '../../components/UI/theme';
+import { openSideMenu, beginTransaction } from '../CustomTopBarButtons/navigationActions';
 import FeedScreen from './Feed';
 import { store } from '../../../App';
 
@@ -10,7 +12,9 @@ class FeedScreenRedux extends Component {
     return {
       topBar: {
         title: {
-          text: 'Feed screen'
+          text: 'Feed screen',
+          color: THEME_WHITE,
+          alignment: 'center'
         },
         leftButtons: [{
           id: 'toggleSideMenu',
@@ -26,7 +30,7 @@ class FeedScreenRedux extends Component {
           component: {
             name: 'cappo.BeginTransactionButton',
             passProps: {
-              onPress: () => alert('Begin transaction')
+              onPress: beginTransaction
             }
           }
         }],

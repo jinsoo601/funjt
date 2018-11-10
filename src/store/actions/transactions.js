@@ -1,13 +1,8 @@
 import { ADD_TRANSACTION } from './actionTypes';
 
-export const addTransaction = (sellerName, itemName, itemCondition, itemPrice) => {
+export const addTransaction = (transactionData) => {
 	return {
 		type: ADD_TRANSACTION,
-		transaction: {
-			sellerName,
-			itemName,
-			itemCondition,
-			itemPrice
-		}
+		transaction: transactionData
 	};
 };

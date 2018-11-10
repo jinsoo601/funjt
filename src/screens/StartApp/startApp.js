@@ -3,11 +3,14 @@ import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { THEME_GREEN, THEME_WHITE } from '../../components/UI/theme';
-import openSideMenu from '../CustomTopBarButtons/openSideMenu';
+import { openSideMenu, goBack } from '../CustomTopBarButtons/navigationActions';
 
 Navigation.events().registerNavigationButtonPressedListener(({ buttonId }) => {
 	if (buttonId === 'toggleSideMenu') {
 		openSideMenu();
+	}
+	if (buttonId === 'backButton') {
+		goBack();
 	}
 });
 
@@ -31,17 +34,10 @@ const startApp = () => {
 					        component: {
 					        	id: 'cappo.FeedScreen',
 					          name: 'cappo.FeedScreen',
-					          passProps: {
-					            text: 'stack with one child'
-					          }
-					        }
+					        },
 					      }],
 					      options: {
 					        topBar: {
-					          title: {
-					            color: THEME_WHITE,
-					            alignment: 'center'
-					          },
 					          background: {
 					          	color: THEME_GREEN
 					          },
@@ -50,11 +46,6 @@ const startApp = () => {
 					          	icon: icons[0],
 					          	color: THEME_WHITE,
 					          }],
-					          rightButtons: [{
-					          	id: 'goToSellScreen',
-					          	icon: icons[1],
-					          	color: THEME_WHITE,
-					          }]
 					        },
 					      }
 					    },

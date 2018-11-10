@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import { connect } from 'react-redux';
 
-import { THEME_GREEN, THEME_BLUE, THEME_WHITE } from '../../components/UI/theme';
 import FilterButton from '../../components/UI/FilterButton/FilterButton';
 import RequestButton from '../../components/UI/RequestButton/RequestButton';
-import openSideMenu from '../CustomTopBarButtons/openSideMenu';
 import TransactionList from '../../components/TransactionList/TransactionList';
 
 class FeedScreen extends Component {
