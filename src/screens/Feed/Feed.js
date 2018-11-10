@@ -1,11 +1,56 @@
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
-import { Navigation } from 'react-native-navigation';
 
 import { THEME_GREEN, THEME_BLUE, THEME_WHITE } from '../../components/UI/theme';
 import FilterButton from '../../components/UI/FilterButton/FilterButton';
 import RequestButton from '../../components/UI/RequestButton/RequestButton';
 import openSideMenu from '../CustomTopBarButtons/openSideMenu';
+import TransactionList from '../../components/TransactionList/TransactionList';
+
+const fakeTransactions = [
+  {
+    sellerName: 'Yubin',
+    itemName: 'iPhone6',
+    itemCondition: 'Good',
+    itemPrice: '150.00',
+    key: `${Math.random()}`
+  },
+  {
+    sellerName: 'Jinsoo',
+    itemName: 'Lenovo Laptop',
+    itemCondition: 'Fair',
+    itemPrice: '250.00',
+    key: `${Math.random()}`
+  },
+  {
+    sellerName: 'Yubin',
+    itemName: 'iPhone6',
+    itemCondition: 'Good',
+    itemPrice: '150.00',
+    key: `${Math.random()}`
+  },
+  {
+    sellerName: 'Jinsoo',
+    itemName: 'Lenovo Laptop',
+    itemCondition: 'Fair',
+    itemPrice: '250.00',
+    key: `${Math.random()}`
+  },
+  {
+    sellerName: 'Yubin',
+    itemName: 'iPhone6',
+    itemCondition: 'Good',
+    itemPrice: '150.00',
+    key: `${Math.random()}`
+  },
+  {
+    sellerName: 'Jinsoo',
+    itemName: 'Lenovo Laptop',
+    itemCondition: 'Fair',
+    itemPrice: '250.00',
+    key: `${Math.random()}`
+  },
+];
 
 class FeedScreen extends Component {
   static options () {
@@ -34,6 +79,7 @@ class FeedScreen extends Component {
           <FilterButton onPress={() => alert('filter')} />
           <RequestButton onPress={() => alert('request')} />
         </View>
+        <TransactionList transactions={fakeTransactions} />
       </View>
     );
   }
