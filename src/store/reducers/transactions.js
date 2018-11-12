@@ -1,4 +1,4 @@
-import { ADD_TRANSACTION } from '../actions/actionTypes';
+import { ADD_TRANSACTION, SELECT_CATEGORY } from '../actions/actionTypes';
 
 const initialState = {
 	transactions: [
@@ -9,7 +9,8 @@ const initialState = {
 	    itemPrice: '150.00',
 	    key: `${Math.random()}`
 	  },
-	]
+	],
+	newTransaction: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -19,6 +20,14 @@ const reducer = (state = initialState, action) => {
 				...state,
 				transactions: state.transactions.concat(action.transaction)
 			};
+		case SELECT_CATEGORY:
+			return {
+				...state,
+				newTransaction: {
+					...state.newTransaction,
+					category: action.category
+				}
+			}
 		default:
 			return state;
 	}

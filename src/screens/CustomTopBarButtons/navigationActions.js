@@ -11,12 +11,38 @@ export const beginTransaction = () => {
 	]).then(icons => {
 		Navigation.push('cappo.FeedScreen', {
 	    component: {
-	      name: 'cappo.TransactionScreen',
+	      name: 'cappo.CategoryScreen',
 	      options: {
-	      	topBar: Platform.OS === 'ios' ? iosTopBar() : androidTopBar(icons[0])
+	      	topBar: Platform.OS === 'ios' ? iosTopBar('Category') : androidTopBar('Category', icons[0])
 	      }
 	    }
 	  })
+	});
+}
+
+export const navigateAfterCategorySelection = category => {
+	Promise.all([
+		Icon.getImageSource('keyboard-arrow-left', 30),
+	]).then(icons => {
+		if (category === 'Electronics') {
+			Navigation.push('cappo.FeedScreen', {
+				component: {
+					name: 'cappo.SubcategoryScreen',
+					options: {
+						topBar: Platform.OS === 'ios' ? iosTopBar(category, 'Back') : androidTopBar(category, icons[0])
+					}
+				}
+			});
+		} else {
+			Navigation.push('cappo.FeedScreen', {
+				component: {
+					name: 'cappo.ImagePickerScreen',
+					options: {
+						topBar: Platform.OS === 'ios' ? iosTopBar('Tack a Picture', 'Back') : androidTopBar('Tack a Picture', icons[0])
+					}
+				}
+			});
+		}
 	});
 }
 
@@ -34,24 +60,24 @@ export const goBack = () => {
 	Navigation.pop('cappo.FeedScreen');
 }
 
-const iosTopBar = () => {
+const iosTopBar = (title, backButtonText = 'Cancel') => {
 	return {
 		title: {
-			text: 'Transaction',
+			text: title,
 			color: THEME_WHITE,
 			alignment: 'center'
 		},
 		backButton: {
-	    title: 'Cancel',
+	    title: backButtonText,
 	    color: THEME_WHITE
 	  }
 	};
 };
 
-const androidTopBar = (icon) => {
+const androidTopBar = (title, icon) => {
 	return {
 		title: {
-			text: 'Transaction',
+			text: title,
 			color: THEME_WHITE,
 			alignment: 'center'
 		},
