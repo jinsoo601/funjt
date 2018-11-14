@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 import { THEME_GREEN } from '../UI/theme';
 import ListItem from '../TransactionListItem/TransactionListItem';
 
-const transactionList = props => {
+const transactionListItem = props => {
 	return (
 		<TouchableWithoutFeedback onPress={() => alert('item pressed. go to item detail')}>
 			<View style={styles.listItemContainer}>
@@ -36,4 +36,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default transactionList;
+export default transactionListItem;
