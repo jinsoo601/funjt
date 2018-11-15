@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import { connect } from 'react-redux';
 
 import FilterButton from '../../components/UI/FilterButton/FilterButton';
 import RequestButton from '../../components/UI/RequestButton/RequestButton';
-import TransactionList from '../../components/TransactionList/TransactionList';
 
 class FeedScreen extends Component {
   render() {
@@ -14,7 +13,7 @@ class FeedScreen extends Component {
           <FilterButton onPress={() => alert('filter')} />
           <RequestButton onPress={() => alert('request')} />
         </View>
-        <TransactionList transactions={this.props.transactions} />
+        <Text>This is your main page.</Text>
       </View>
     );
   }

@@ -1,4 +1,4 @@
-import { ADD_TRANSACTION, SELECT_CATEGORY } from '../actions/actionTypes';
+import { ADD_TRANSACTION, SELECT_CATEGORY, SELECT_ITEM_NAME } from '../actions/actionTypes';
 
 const initialState = {
 	transactions: [
@@ -27,7 +27,15 @@ const reducer = (state = initialState, action) => {
 					...state.newTransaction,
 					category: action.category
 				}
-			}
+			};
+		case SELECT_ITEM_NAME:
+			return {
+				...state,
+				newTransaction: {
+					...state.newTransaction,
+					itemName: action.itemName
+				}
+			};
 		default:
 			return state;
 	}

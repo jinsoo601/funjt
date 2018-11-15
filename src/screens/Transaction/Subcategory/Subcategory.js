@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { connect } from 'react-redux';
 
 import { THEME_GREEN, THEME_WHITE, THEME_BACKGROUND, THEME_DISABLED, THEME_TEXT } from '../../../components/UI/theme';
-import { selectCategory } from '../../../store/actions/index';
+import { selectItemName } from '../../../store/actions/index';
 import CategorySquare from '../../../components/CategorySquare/CategorySquare';
 import { navigateAfterCategorySelection } from '../../CustomTopBarButtons/navigationActions';
 
@@ -61,6 +62,11 @@ class Subcategory extends Component {
 		});
 	}
 
+	onSelectItemName = itemName => {
+		navigateAfterCategorySelection(itemName);
+    this.props.onSelectItemName(itemName);
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -115,7 +121,7 @@ class Subcategory extends Component {
 							<ScrollView>
 								{
 									options[this.state.selectedSubcategory].map(itemName => (
-										<TouchableWithoutFeedback onPress={() => alert('clicked. go to image picker')} key={itemName}>
+										<TouchableWithoutFeedback onPress={() => this.onSelectItemName(itemName)} key={itemName}>
 											<View style={styles.listItem}>
 												<Text style={styles.listItemText}>{itemName}</Text>
 											</View>
@@ -168,4 +174,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Subcategory;
+const mapDispatchToProps = dispatch => {
+  return {
+    onSelectItemName: itemName => dispatch(selectItemName(itemName))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Subcategory);

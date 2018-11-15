@@ -1,1 +1,1 @@
-export { addTransaction, selectCategory } from './transactions';
+export { addTransaction, selectCategory, selectItemName } from './transactions';

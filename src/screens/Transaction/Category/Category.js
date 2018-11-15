@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import { Navigation } from 'react-native-navigation';
 
 import { THEME_BACKGROUND } from '../../../components/UI/theme';
 import { selectCategory } from '../../../store/actions/index';
