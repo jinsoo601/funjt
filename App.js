@@ -1,34 +1,163 @@
 import { Navigation } from 'react-native-navigation';
-import { Provider } from 'react-redux';
 
-import AuthScreen from './src/screens/Auth/Auth';
-import FeedScreen from './src/screens/Feed/Feed.Container';
-import CategoryScreen from './src/screens//Transaction/Category/Category.Container';
-import ImagePickerScreen from './src/screens//Transaction/ImagePicker/ImagePicker.Container';
-import SubcategoryScreen from './src/screens//Transaction/Subcategory/Subcategory.Container';
-import SideMenu from './src/screens/SideMenu/SideMenu';
-import SideMenuButton from './src/screens/CustomTopBarButtons/SideMenuButton';
-import BeginTransactionButton from './src/screens/CustomTopBarButtons/BeginTransactionButton';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import configureStore from './src/store/configureStore';
+import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE, THEME_BLACK } from './src/components/UI/theme';
+import ScheduleScreen from './src/screens/Schedule/Schedule';
+import ScheduleDetailScreen from './src/screens/ScheduleDetail/ScheduleDetail';
+import StatusScreen from './src/screens/Status/Status';
+import DayScheduleScreen from './src/screens/DaySchedule/DaySchedule';
 
-export const store = configureStore();
-
-Navigation.registerComponent('cappo.AuthScreen', () => AuthScreen);
-Navigation.registerComponent('cappo.FeedScreen', () => FeedScreen);
-Navigation.registerComponent('cappo.CategoryScreen', () => CategoryScreen);
-Navigation.registerComponent('cappo.ImagePickerScreen', () => ImagePickerScreen);
-Navigation.registerComponent('cappo.SubcategoryScreen', () => SubcategoryScreen);
-Navigation.registerComponent('cappo.SideMenu', () => SideMenu);
-Navigation.registerComponent('cappo.SideMenuButton', () => SideMenuButton);
-Navigation.registerComponent('cappo.BeginTransactionButton', () => BeginTransactionButton);
+Navigation.registerComponent('funjt.ScheduleScreen', () => ScheduleScreen);
+Navigation.registerComponent('funjt.StatusScreen', () => StatusScreen);
+Navigation.registerComponent('funjt.DayScheduleScreen', () => DayScheduleScreen);
+Navigation.registerComponent('funjt.ScheduleDetailScreen', () => ScheduleDetailScreen);
 
 Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setRoot({
-    root: {
-      component: {
-        name: "cappo.AuthScreen"
-      }
-    }
-  });
+	Promise.all([
+		Icon.getImageSource('watch-later', 30),
+		Icon.getImageSource('date-range', 30),
+		Icon.getImageSource('train', 30)
+	]).then(icons => {
+		Navigation.setRoot({
+	    root: {
+		    bottomTabs: {
+		      children: [
+		      	{
+		          stack: {
+		            children: [
+		              {
+					          component: {
+					            name: 'funjt.ScheduleScreen',
+					            id: 'funjt.ScheduleScreen',
+					            options: {
+							          bottomTab: {
+							            text: 'Schedule',
+							            textColor: THEME_WHITE,
+							            selectedTextColor: THEME_SECONDARY,
+							            icon: icons[0],
+							            iconColor: THEME_WHITE,
+							            selectedIconColor: THEME_SECONDARY
+							          },
+							          topBar: {
+							          	title: {
+							          		text: 'Schedule',
+							          		alignment: 'center',
+							          		color: THEME_WHITE
+							          	},
+							          },
+							        },
+					          },
+					        },
+		            ],
+		            options: {
+						      bottomTab: {
+						      	textColor: THEME_WHITE,
+							      selectedTextColor: THEME_SECONDARY,
+							      iconColor: THEME_WHITE,
+							      selectedIconColor: THEME_SECONDARY
+						      },
+						      topBar: {
+						      	background: {
+						      		color: THEME_PRIMARY
+						      	}
+						      },
+					      },
+		          }
+		      	},
+		      	{
+		          stack: {
+		            children: [
+		              {
+					          component: {
+					            name: 'funjt.DayScheduleScreen',
+					            id: 'funjt.DayScheduleScreen',
+					            options: {
+							          bottomTab: {
+							            text: 'Day Schedule',
+							            textColor: THEME_WHITE,
+							            selectedTextColor: THEME_SECONDARY,
+							            icon: icons[1],
+							            iconColor: THEME_WHITE,
+							            selectedIconColor: THEME_SECONDARY
+							          },
+							          topBar: {
+							          	title: {
+							          		text: 'Choose a day',
+							          		alignment: 'center',
+							          		color: THEME_WHITE
+							          	},
+							          },
+							        }
+					          },
+					        },
+		            ],
+		            options: {
+						      bottomTab: {
+						      	textColor: THEME_WHITE,
+							      selectedTextColor: THEME_SECONDARY,
+							      iconColor: THEME_WHITE,
+							      selectedIconColor: THEME_SECONDARY
+						      },
+						      topBar: {
+						      	background: {
+						      		color: THEME_PRIMARY
+						      	}
+						      },
+					      },
+		          }
+		      	},
+		      	{
+		          stack: {
+		            children: [
+		              {
+					          component: {
+					            name: 'funjt.StatusScreen',
+					            id: 'funjt.StatusScreen',
+					            options: {
+							          bottomTab: {
+							            text: 'Status',
+							            textColor: THEME_WHITE,
+							            selectedTextColor: THEME_SECONDARY,
+							            icon: icons[2],
+							            iconColor: THEME_WHITE,
+							            selectedIconColor: THEME_SECONDARY
+							          },
+							          topBar: {
+							          	title: {
+							          		text: 'Status',
+							          		alignment: 'center',
+							          		color: THEME_WHITE
+							          	},
+							          },
+							        }
+					          },
+					        },
+		            ],
+		            options: {
+						      bottomTab: {
+						      	textColor: THEME_WHITE,
+							      selectedTextColor: THEME_SECONDARY,
+							      iconColor: THEME_WHITE,
+							      selectedIconColor: THEME_SECONDARY
+						      },
+						      topBar: {
+						      	background: {
+						      		color: THEME_PRIMARY
+						      	}
+						      },
+					      },
+		          }
+		      	},
+		      ],
+		      options: {
+			      bottomTabs: {
+			      	backgroundColor: THEME_PRIMARY,
+			      	titleDisplayMode: 'alwaysShow'
+			      },
+		      },
+		    },
+		  }
+	  });
+	});
 });

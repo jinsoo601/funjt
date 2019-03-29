@@ -1,4 +1,4 @@
-rootProject.name = 'cappo'
+rootProject.name = 'funjt'
 
 include ':app'
 
