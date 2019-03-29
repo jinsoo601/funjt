@@ -12,7 +12,7 @@ const scheduleCardContent = props => (
 			<Icon name={props.schedule.first.type === 'TRAIN' ? 'train' : 'directions-bus'} size={20} color={'black'} />
 			<Text style={styles.typeText}>{props.schedule.first.type}</Text>
 			<Text style={styles.description}>
-				{props.schedule.first.type === 'TRAIN' ? ' NY Penn to Princeton Junction' : ' Princeton to Princeton Junction'}
+				{` ${props.schedule.first.schedule.from.station} to ${props.schedule.first.schedule.to.station}`}
 			</Text>
 			{props.schedule.first.type === 'TRAIN' && <Text style={styles.trainNumber}>{`#${props.schedule.first.schedule.trainNumber}`}</Text>}
 		</View>
