@@ -9,16 +9,8 @@ import fromNewYorkRoutes from '../../assets/fromNewYorkRoutes';
 import toNewYorkRoutes from '../../assets/toNewYorkRoutes';
 
 export const getASAPSchedule = (from, to, time = null) => {
-  let routes = null;
-
-  // determine fromNY or ToNY
-  if (stationIndex[from] - stationIndex[to] < 0) routes = fromNewYorkRoutes;
-  if (stationIndex[from] - stationIndex[to] > 0) routes = toNewYorkRoutes;
-
-  // determine weekend or weekday
-  const { day, timeInt } = getDayAndTimeInt();
-  if (isWeekend(day)) routes = routes.filter(route => route.isWeekend);
-  else routes = routes.filter(route => !route.isWeekend);
+  const routes = initializeRoutes(from, to);
+  const { timeInt } = getDayAndTimeInt();
 
   // find a route that includes from and to
   const soonest = getSoonestSchedule(routes, from, to, time || timeInt);
@@ -29,6 +21,19 @@ export const getASAPSchedule = (from, to, time = null) => {
   };
   schedule.key = soonest.trainNumber;
   return [schedule];
+}
+
+const initializeRoutes = (from, to) => {
+  let routes = null;
+
+  // determine fromNY or ToNY
+  if (stationIndex[from] - stationIndex[to] < 0) routes = fromNewYorkRoutes;
+  if (stationIndex[from] - stationIndex[to] > 0) routes = toNewYorkRoutes;
+
+  // determine weekend or weekday
+  const { day } = getDayAndTimeInt();
+  if (isWeekend(day)) return routes.filter(route => route.isWeekend);
+  else return routes.filter(route => !route.isWeekend);
 }
 
 const getDayAndTimeInt = () => {
@@ -65,7 +70,29 @@ const getSoonestSchedule = (routes, from, to, timeInt) => {
 }
 
 export const getDaySchedule = (from, to) => {
+  const routes = initializeRoutes(from, to);
 
+  let schedules = [];
+  for (let i = 0; i < routes.length; i++) {
+    const route = routes[i];
+    const fromStation = route.routes.find(r => r.station === from);
+    const toStation = route.routes.find(r => r.station === to);
+    if (fromStation && toStation) {
+      schedules.push({
+        first: {
+          type: 'TRAIN',
+          schedule: {
+            from: fromStation,
+            to: toStation,
+            trainNumber: route.trainNumber
+          }
+        },
+        key: route.trainNumber
+      });
+    }
+  }
+
+  return schedules;
 };
 
 export const openScheduleDetail = (schedule) => {
@@ -95,7 +122,7 @@ export const openScheduleDetail = (schedule) => {
 
 export const getTimeStr = (timeInt) => {
   let hours = parseInt(timeInt/100);
-  hours = `${hours > 12 ? hours - 12 : hours}`;
+  hours = `${hours % 12}`;
   hours = hours.length < 2 ? `0${hours}` : hours;
   hours = hours === '00' ? '12' : hours;
   let minutes = `${timeInt % 100}`;

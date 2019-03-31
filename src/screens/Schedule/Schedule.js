@@ -13,8 +13,8 @@ import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
 import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
 import CollapseButton from '../../components/CollapseButton/CollapseButton';
-import { getDaySchedule, openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from './Schedule.Function';
-import { getASAPSchedule } from './scheduleUtil';
+import { openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from './Schedule.Function';
+import { getASAPSchedule, getDaySchedule } from './scheduleUtil';
 
 const CustomLayoutSpring = getCustomLayoutSpring();
 
@@ -29,40 +29,22 @@ class ScheduleScreen extends Component {
     height: 238
   };
 
-  constructor(props) {
-    super(props);
-
-    this.dayScheduleToNewYork = getDaySchedule('NEW YORK');
-    this.dayScheduleToPrinceton = getDaySchedule('PRINCETON');
-  }
-
   onGetSchedule = () => {
-    const scheduleList = getASAPSchedule(this.state.from, this.state.to);
-    this.setState({ scheduleList });
+    let scheduleList = null;
 
-    // let scheduleList = null;
-    // if (this.state.scheduleType === 'ASAP') {
-    //   scheduleList = getASAPSchedule(this.state.from, this.state.to);
-    // } else {
-    //   const today = new Date().getDay();
-    //   if (this.state.today !== today) { // update day schedules if day 
-    //     this.dayScheduleToNewYork = getDaySchedule('NEW YORK');
-    //     this.dayScheduleToPrinceton = getDaySchedule('PRINCETON');
-    //     this.setState({ today });
-    //   }
-    //   scheduleList = this.state.destination === 'PRINCETON' ? this.dayScheduleToPrinceton : this.dayScheduleToNewYork;
-    //   scheduleList = getDaySchedule(this.state.from, this.state.to);
-    // }
-    // scheduleList.forEach(s => s.key = `${Math.random()}`)
-    // this.setState({
-    //   scheduleList
-    // });
+    if (this.state.scheduleType === 'ASAP') {
+      scheduleList = getASAPSchedule(this.state.from, this.state.to);
+    } else {
+      scheduleList = getDaySchedule(this.state.from, this.state.to);
+    }
+
+    this.setState({ scheduleList });
   }
 
   renderListItem = (info) => {
     const trainNumber = getTrainNumberFromSchedule(info.item);
     if (this.state.scheduleList.length === 1) {
-      return <ScheduleCard schedule={info.item} key={`${Math.random()}`} />
+      return <ScheduleCard schedule={info.item} />
     } else {
       return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item)} trainNumber={trainNumber} />
     }

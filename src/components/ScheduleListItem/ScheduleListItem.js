@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { THEME_BLACK, THEME_DISABLED } from '../UI/theme';
-import { getTimeStr } from '../../screens/Schedule/Schedule.Function';
+import { getTimeStr } from '../../screens/Schedule/scheduleUtil';
 
 const scheduleListItem = props => (
 	<TouchableWithoutFeedback onPress={props.onPress}>
@@ -12,12 +12,12 @@ const scheduleListItem = props => (
 			<Icon name="schedule" size={30} color={THEME_BLACK} style={styles.leftIcon} />
 			<View>
 				<Text style={styles.subText}>Departure: </Text>
-				<Text style={styles.text}>{getTimeStr(props.schedule.first.schedule.departAt)}</Text>
+				<Text style={styles.text}>{getTimeStr(props.schedule.first.schedule.from.departAt)}</Text>
 			</View>
 			<Icon name="arrow-forward" size={15} color={THEME_BLACK} style={styles.middleIcon} />
 			<View>
 				<Text style={styles.subText}>Arrival: </Text>
-				<Text style={styles.text}>{getTimeStr(props.schedule.second.schedule.arriveAt)}</Text>
+				<Text style={styles.text}>{getTimeStr(props.schedule.first.schedule.to.departAt)}</Text>
 			</View>
 			<Text style={styles.trainNumber}>{props.trainNumber}</Text>
 		</View>
