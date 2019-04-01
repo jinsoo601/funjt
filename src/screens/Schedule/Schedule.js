@@ -42,11 +42,10 @@ class ScheduleScreen extends Component {
   }
 
   renderListItem = (info) => {
-    const trainNumber = getTrainNumberFromSchedule(info.item);
     if (this.state.scheduleList.length === 1) {
       return <ScheduleCard schedule={info.item} />
     } else {
-      return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item)} trainNumber={trainNumber} />
+      return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item)} />
     }
   }
 
