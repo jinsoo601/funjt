@@ -6,40 +6,44 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../UI/theme';
 import { getTimeStr } from '../../screens/Schedule/scheduleUtil';
 
-const scheduleCardContent = props => (
-	<View style={styles.container}>
-		<View style={styles.header}>
-			<Icon name={props.schedule.first.type === 'TRAIN' ? 'train' : 'directions-bus'} size={20} color={'black'} />
-			<Text style={styles.typeText}>{props.schedule.first.type}</Text>
-			<Text style={styles.description}>
-				{` ${props.schedule.first.schedule.from.station} to ${props.schedule.first.schedule.to.station}`}
-			</Text>
-			{props.schedule.first.type === 'TRAIN' && <Text style={styles.trainNumber}>{`#${props.schedule.first.schedule.trainNumber}`}</Text>}
-		</View>
-		<View style={[styles.timeText, { marginBottom: 10}]}>
-			<Text>Departure: {getTimeStr(props.schedule.first.schedule.from.departAt)}</Text>
-    	<Text>Arrival: {getTimeStr(props.schedule.first.schedule.to.departAt)}</Text>
-		</View>
-		{
-			props.schedule.second && (
-				<React.Fragment>
-					<View style={styles.header}>
-						<Icon name={props.schedule.second.type === 'TRAIN' ? 'train' : 'directions-bus'} size={20} color={'black'} />
-						<Text style={styles.typeText}>{props.schedule.second.type}</Text>
-						<Text style={styles.description}>
-							{props.schedule.second.type === 'TRAIN' ? ' Princeton Junction to  NY Penn' : ' Princeton Junction to Princeton'}
-						</Text>
-						{props.schedule.second.type === 'TRAIN' && <Text style={styles.trainNumber}>{`#${props.schedule.second.schedule.trainNumber}`}</Text>}
-					</View>
-			    <View style={styles.timeText}>
-			    	<Text>Departure: {getTimeStr(props.schedule.second.schedule.departAt)}</Text>
-			    	<Text>Arrival: {getTimeStr(props.schedule.second.schedule.arriveAt)}</Text>
-			    </View>
-		    </React.Fragment>
-			)
-		}
-  </View>
-);
+const getIconName = type => (type === 'TRAIN' ? 'train' : 'directions-bus');
+
+const scheduleCardContent = ({ schedule }) => {
+	return (
+		<View style={styles.container}>
+			<View style={styles.header}>
+				<Icon name={getIconName(schedule.first.type)} size={20} color={'black'} />
+				<Text style={styles.typeText}>{schedule.first.type}</Text>
+				<Text style={styles.description}>
+					{` ${schedule.first.schedule.from.station} to ${schedule.first.schedule.to.station}`}
+				</Text>
+				{schedule.first.type === 'TRAIN' && <Text style={styles.trainNumber}>{`#${schedule.first.schedule.trainNumber}`}</Text>}
+			</View>
+			<View style={[styles.timeText, { marginBottom: 10 }]}>
+				<Text>Departure: {getTimeStr(schedule.first.schedule.from.departAt)}</Text>
+	    	<Text>Arrival: {getTimeStr(schedule.first.schedule.to.departAt)}</Text>
+			</View>
+			{
+				schedule.second && (
+					<React.Fragment>
+						<View style={styles.header}>
+							<Icon name={getIconName(schedule.second.type)} size={20} color={'black'} />
+							<Text style={styles.typeText}>{schedule.second.type}</Text>
+							<Text style={styles.description}>
+								{` ${schedule.second.schedule.from.station} to ${schedule.second.schedule.to.station}`}
+							</Text>
+							{schedule.second.type === 'TRAIN' && <Text style={styles.trainNumber}>{`#${schedule.second.schedule.trainNumber}`}</Text>}
+						</View>
+				    <View style={styles.timeText}>
+				    	<Text>Departure: {getTimeStr(schedule.second.schedule.from.departAt)}</Text>
+				    	<Text>Arrival: {getTimeStr(schedule.second.schedule.to.departAt)}</Text>
+				    </View>
+			    </React.Fragment>
+				)
+			}
+	  </View>
+  );
+};
 
 const styles = StyleSheet.create({
 	container: {

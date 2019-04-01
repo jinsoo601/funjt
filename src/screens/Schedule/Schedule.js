@@ -13,8 +13,8 @@ import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
 import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
 import CollapseButton from '../../components/CollapseButton/CollapseButton';
-import { openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from './Schedule.Function';
-import { getASAPSchedule, getDaySchedule } from './scheduleUtil';
+import { getCustomLayoutSpring, getTrainNumberFromSchedule } from './Schedule.Function';
+import { getASAPSchedule, getDaySchedule, openScheduleDetail } from './scheduleUtil';
 
 const CustomLayoutSpring = getCustomLayoutSpring();
 

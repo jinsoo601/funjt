@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../UI/theme';
 import Header from './ScheduleCard.Header';
 import Content from './ScheduleCard.Content';
-import { getNextSchedule, getPrevSchedule } from '../../screens/Schedule/scheduleUtil';
+import { getNextSchedule, getPrevSchedule, getDepartAtAndArrivalAt } from '../../screens/Schedule/scheduleUtil';
 
 class ScheduleCard extends Component {
 	state = {
@@ -61,8 +61,7 @@ class ScheduleCard extends Component {
 
 	render() {
 		// for header
-		const departAt = this.state.schedule.first.schedule.from.departAt;
-		const arriveAt = this.state.schedule.first.schedule.to.departAt;
+		const { departAt, arriveAt } = getDepartAtAndArrivalAt(this.state.schedule);
 
 		return (
 			<Animated.View

@@ -7,23 +7,124 @@ import stationIndex from '../../constants/stationIndex';
 import { SUN, MON, TUE, WED, THU, FRI, SAT } from '../../constants/days';
 import fromNewYorkRoutes from '../../assets/fromNewYorkRoutes';
 import toNewYorkRoutes from '../../assets/toNewYorkRoutes';
+import { busToPrinceton, busToJunction } from '../../assets/busSchedule';
 
 export const getASAPSchedule = (from, to, time = null) => {
+  if (from === stations.PRINCETON) {
+    return getFromPrincetonASAPSchedule(to);
+  }
+  if (to === stations.PRINCETON) {
+    return getToPrincetonASAPSchedule(from);
+  }
+
   const routes = initializeRoutes(from, to);
   const { timeInt } = getDayAndTimeInt();
+  console.log(routes[0]);
 
   // find a route that includes from and to
-  const soonest = getSoonestSchedule(routes, from, to, time || timeInt);
+  const soonest = getSoonestTrainSchedule(routes, from, to, time || timeInt);
   const schedule = {};
   schedule.first = {
     type: 'TRAIN',
     schedule: soonest
   };
-  schedule.key = soonest.trainNumber;
+  schedule.key = soonest.trainNumber + `${Math.random()}`;
   return [schedule];
 }
 
-const initializeRoutes = (from, to) => {
+const getFromPrincetonASAPSchedule = (to) => {
+  const routes = initializeRoutes(stations.PRINCETON_JUNCTION, to);
+  let { day, timeInt } = getDayAndTimeInt();
+  const soonestBusToPrincetonJunction = getSoonestBusSchedule(busToJunction, day, timeInt);
+  const busArrivalTime = soonestBusToPrincetonJunction.arriveAt;
+  const soonestTrainToNewYork = getSoonestTrainSchedule(routes, stations.PRINCETON_JUNCTION, to, busArrivalTime);
+
+  const schedule = {
+    first: {
+      type: 'BUS',
+      schedule: {
+        from: { station: stations.PRINCETON, departAt: soonestBusToPrincetonJunction.departAt },
+        to: { station: stations.PRINCETON_JUNCTION, departAt: busArrivalTime }
+      }
+    },
+    second: {
+      type: 'TRAIN',
+      schedule: soonestTrainToNewYork
+    },
+    key: soonestTrainToNewYork.trainNumber + `${Math.random()}`
+  }
+  return [schedule];
+}
+
+const getToPrincetonASAPSchedule = (from) => {
+  const routes = initializeRoutes(from, stations.PRINCETON_JUNCTION);
+  let { day, timeInt } = getDayAndTimeInt();
+  /*
+  schedule = {
+    from: { station, departAt }, to: { station, departAt }, trainNumber
+  }
+  */
+  const schedule = {};
+  const soonestTrainToPrincetonJunction = getSoonestTrainSchedule(routes, from, stations.PRINCETON_JUNCTION, timeInt);
+  const trainArrivalTime = soonestTrainToPrincetonJunction.to.departAt;
+  if (trainArrivalTime >= 2400) {
+    day = day + 1 > 6 ? SUN : day + 1;
+    trainArrivalTime -= 2400;
+  }
+  const soonestBusToPrinceton = getSoonestBusSchedule(busToPrinceton, day, trainArrivalTime);
+
+  schedule.first = {
+    type: 'TRAIN',
+    schedule: soonestTrainToPrincetonJunction
+  };
+  schedule.second = {
+    type: 'BUS',
+    schedule: {
+      from: { station: stations.PRINCETON_JUNCTION, departAt: soonestBusToPrinceton.departAt },
+      to: { station: stations.PRINCETON, departAt: soonestBusToPrinceton.arriveAt }
+    }
+  };
+  schedule.key = soonestTrainToPrincetonJunction.trainNumber + `${Math.random()}`;
+
+  return [schedule];
+}
+
+const getSoonestTrainSchedule = (routes, from, to, timeInt) => {
+  for (let i = 0; i < routes.length; i++) {
+    const route = routes[i];
+    const fromStation = route.routes.find(r => r.station === from);
+    const toStation = route.routes.find(r => r.station === to);
+    if (fromStation && toStation && fromStation.departAt > timeInt) {
+      return {
+        from: fromStation,
+        to: toStation,
+        trainNumber: route.trainNumber
+      };
+    }
+  }
+  // if code got here, then there was no match. Modify args and search again.
+  const { day } = getDayAndTimeInt();
+  const newRoutes = initializeRoutes(from, to, day + 1);
+  return getSoonestTrainSchedule(newRoutes, from, to, timeInt - 2400);
+}
+
+const getSoonestBusSchedule = (busSchedules, day, timeInt) => {
+  let schedule = null;
+  const today = day > 6 ? SUN : day;
+  const todaySchedules = busSchedules[today];
+  for (let i = 0, len = todaySchedules.length; i < len; i++) {
+    if (todaySchedules[i].departAt > timeInt) {
+      schedule = todaySchedules[i];
+      break;
+    }
+  }
+  if (!schedule) {
+    schedule = getSoonestSchedule(schedules, day + 1, timeInt - 2400);
+  }
+  return schedule;
+}
+
+const initializeRoutes = (from, to, today = null) => {
   let routes = null;
 
   // determine fromNY or ToNY
@@ -32,7 +133,7 @@ const initializeRoutes = (from, to) => {
 
   // determine weekend or weekday
   const { day } = getDayAndTimeInt();
-  if (isWeekend(day)) return routes.filter(route => route.isWeekend);
+  if (isWeekend(today || day)) return routes.filter(route => route.isWeekend);
   else return routes.filter(route => !route.isWeekend);
 }
 
@@ -52,22 +153,6 @@ const getTimeInt = (time) => {
 };
 
 const isWeekend = (day) => (day === SAT || day === SUN);
-
-const getSoonestSchedule = (routes, from, to, timeInt) => {
-  for (let i = 0; i < routes.length; i++) {
-    const route = routes[i];
-    const fromStation = route.routes.find(r => r.station === from);
-    const toStation = route.routes.find(r => r.station === to);
-    if (fromStation && toStation && fromStation.departAt > timeInt) {
-      return {
-        from: fromStation,
-        to: toStation,
-        trainNumber: route.trainNumber
-      };
-    }
-  }
-  return null;
-}
 
 export const getDaySchedule = (from, to) => {
   const routes = initializeRoutes(from, to);
@@ -96,7 +181,7 @@ export const getDaySchedule = (from, to) => {
 };
 
 export const openScheduleDetail = (schedule) => {
-  const title = `${getTimeStr(schedule.first.schedule.departAt)} ~ ${getTimeStr(schedule.second.schedule.arriveAt)}`
+  const title = `${getTimeStr(schedule.first.schedule.from.departAt)} ~ ${getTimeStr(schedule.first.schedule.to.departAt)}`
   Navigation.push('funjt.ScheduleScreen', {
     component: {
       name: 'funjt.ScheduleDetailScreen',
@@ -149,6 +234,19 @@ export const getTrainNumberFromSchedule = schedule => {
   const { first, second } = schedule;
   if (first.type === 'TRAIN') return `#${first.schedule.trainNumber}`;
   return `#${second.schedule.trainNumber}`;
+}
+
+export const getDepartAtAndArrivalAt = (schedule) => {
+  if (schedule.second) {
+    return {
+      departAt: schedule.first.schedule.from.departAt,
+      arriveAt: schedule.second.schedule.to.departAt
+    };
+  }
+  return {
+    departAt: schedule.first.schedule.from.departAt,
+    arriveAt: schedule.first.schedule.to.departAt
+  };
 }
 
 export const getNextSchedule = schedule => {
