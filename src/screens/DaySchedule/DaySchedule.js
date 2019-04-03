@@ -1,24 +1,140 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, FlatList, Keyboard } from 'react-native';
+import { Text, View, FlatList, LayoutAnimation, NativeModules } from 'react-native';
+import DatePicker from 'react-native-datepicker'
 
-import { Hoshi } from 'react-native-textinput-effects';
+import { THEME_PRIMARY } from '../../components/UI/theme';
+import styles from '../Schedule/Schedule.Style';
+import stations from '../../constants/stations';
+import ModeButton from '../../components/ModeButton/ModeButton';
+import Dropdown from '../../components/Dropdown/Dropdown';
+import SubmitButton from '../../components/SubmitButton/SubmitButton';
+import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
+import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
+import CollapseButton from '../../components/CollapseButton/CollapseButton';
+import { getDaySchedule, openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from '../Schedule/scheduleUtil';
 
-import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../../components/UI/theme';
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+const CustomLayoutSpring = getCustomLayoutSpring();
 
 class DayScheduleScreen extends Component {
+  state = {
+    from: null,
+    to: null,
+    date: new Date(),
+    scheduleList: [],
+    collapsed: false,
+    height: 238
+  };
+
+  onGetSchedule = () => {
+    if (!this.state.from || !this.state.to) return;
+    const day = new Date(this.state.date).getDay();
+    const scheduleList = getDaySchedule(this.state.from, this.state.to, day);
+    this.setState({ scheduleList });
+  }
+
+  renderListItem = (info) => {
+    return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item)} />
+  }
+
+  toggle = () => {
+    LayoutAnimation.configureNext(CustomLayoutSpring);
+    this.setState(prevState => {
+      return {
+        height: prevState.collapsed ? 238 : 0,
+        collapsed: !prevState.collapsed,
+        showFromDropdown: false,
+        showToDropdown: false 
+      }
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Hi this will be day screen.</Text>
+        <View style={styles.collapseButtonContainer}>
+          <CollapseButton 
+            collapsed={this.state.collapsed}
+            onPress={this.toggle} 
+          />
+        </View>
+        <View 
+          style={{ height: this.state.height }}
+        >
+          <Text style={styles.modeButtonLabel}>Where are you going today?</Text>
+          <View style={styles.row}>
+            <ModeButton
+              value={this.state.from || 'From'}
+              onPress={() => this.setState(prevState => ({ showFromDropdown: !prevState.showFromDropdown }))}
+              isActive={!!this.state.from}
+              collapsed={this.state.collapsed}
+              iconName="arrow-drop-down"
+            />
+            <ModeButton
+              value={this.state.to || 'To'}
+              onPress={() => this.setState(prevState => ({ showToDropdown: !prevState.showToDropdown }))}
+              isActive={!!this.state.to}
+              collapsed={this.state.collapsed}
+              iconName="arrow-drop-down"
+            />
+          </View>
+          <Text style={[styles.modeButtonLabel, { marginTop: 10 }]}>Choose a date:</Text>
+          <View style={styles.row}>
+            {
+              !this.state.collapsed &&
+              <DatePicker
+                style={{ flex: 1, margin: 10 }}
+                date={this.state.date}
+                mode="date"
+                format="YYYY/MM/DD"
+                confirmBtnText="Confirm"
+                cancelBtnText="Close"
+                showIcon={false}
+                onDateChange={(date) => this.setState({ date })}
+                customStyles={{
+                  dateInput: {
+                    borderColor: THEME_PRIMARY
+                  }
+                }}
+              />
+            }
+          </View>
+          <View style={styles.submitButtonContainer}>
+            <SubmitButton
+              title="Get Schedule"
+              onPress={this.onGetSchedule}
+              style={styles.submitButton}
+              collapsed={this.state.collapsed}
+            />
+          </View>
+        </View>
+        <FlatList
+          data={this.state.scheduleList}
+          renderItem={this.renderListItem}
+          scrollEnabled={this.state.scheduleList.length > 1}
+        />
+        <View style={[styles.row, styles.dropdowns]}>
+          {
+            this.state.showFromDropdown ? (
+              <Dropdown
+                onSelect={option => this.setState({ from: option, showFromDropdown: false })}
+                options={Object.values(stations)}
+              />
+            ) : <View style={{ flex: 1, margin: 10 }} />
+          }
+          {
+            this.state.showToDropdown ? (
+              <Dropdown
+                onSelect={option => this.setState({ to: option, showToDropdown: false })}
+                options={Object.values(stations)}
+              />
+            ) : <View style={{ flex: 1, margin: 10 }} />
+          }
+        </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  }
-});
 
 export default DayScheduleScreen;

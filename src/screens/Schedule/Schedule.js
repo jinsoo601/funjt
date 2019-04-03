@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, FlatList, LayoutAnimation, NativeModules } from 'react-native';
 
-const { UIManager } = NativeModules;
-
-UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-
 import styles from './Schedule.Style';
 import stations from '../../constants/stations';
 import ModeButton from '../../components/ModeButton/ModeButton';
@@ -13,9 +9,10 @@ import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
 import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
 import CollapseButton from '../../components/CollapseButton/CollapseButton';
-import { getCustomLayoutSpring, getTrainNumberFromSchedule } from './Schedule.Function';
-import { getASAPSchedule, getDaySchedule, openScheduleDetail } from './scheduleUtil';
+import { getASAPSchedule, getDaySchedule, openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from './scheduleUtil';
 
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 const CustomLayoutSpring = getCustomLayoutSpring();
 
 class ScheduleScreen extends Component {
@@ -25,11 +22,11 @@ class ScheduleScreen extends Component {
     scheduleType: null,
     scheduleList: [],
     collapsed: false,
-    today: new Date().getDay(), // to update day schedule when day changes,
     height: 238
   };
 
   onGetSchedule = () => {
+    if (!this.state.from || !this.state.to) return;
     let scheduleList = null;
 
     if (this.state.scheduleType === 'ASAP') {
@@ -80,12 +77,14 @@ class ScheduleScreen extends Component {
               onPress={() => this.setState(prevState => ({ showFromDropdown: !prevState.showFromDropdown }))}
               isActive={!!this.state.from}
               collapsed={this.state.collapsed}
+              iconName="arrow-drop-down"
             />
             <ModeButton
               value={this.state.to || 'To'}
               onPress={() => this.setState(prevState => ({ showToDropdown: !prevState.showToDropdown }))}
               isActive={!!this.state.to}
               collapsed={this.state.collapsed}
+              iconName="arrow-drop-down"
             />
           </View>
           <Text style={[styles.modeButtonLabel, { marginTop: 10 }]}>What schedule do you want to see?</Text>
