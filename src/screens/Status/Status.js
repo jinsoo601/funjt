@@ -7,8 +7,25 @@ import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../../components/UI
 import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import StatusListItem from '../../components/StatusListItem/StatusListItem';
 import { parseStatus } from './Status.Function';
+import { openSettingScreen } from '../../util/navUtil';
 
 class StatusScreen extends Component {
+  static options () {
+    return {
+      topBar: {
+        rightButtons: [{
+          id: 'openSetHomeScreen',
+          component: {
+            name: 'funjt.SettingButton',
+            passProps: {
+              onPress: () => openSettingScreen('funjt.StatusScreen')
+            }
+          }
+        }],
+      }
+    };
+  }
+  
   state = {
     trainNumber: null,
     status: []

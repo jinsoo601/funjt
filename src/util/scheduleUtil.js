@@ -1,13 +1,10 @@
-import { Navigation } from 'react-native-navigation';
-import { LayoutAnimation } from 'react-native';
-
-import { THEME_WHITE } from '../../components/UI/theme';
-import stations from '../../constants/stations';
-import stationIndex from '../../constants/stationIndex';
-import { SUN, MON, TUE, WED, THU, FRI, SAT } from '../../constants/days';
-import fromNewYorkRoutes from '../../assets/fromNewYorkRoutes';
-import toNewYorkRoutes from '../../assets/toNewYorkRoutes';
-import { busToPrinceton, busToJunction } from '../../assets/busSchedule';
+import { THEME_WHITE } from '../components/UI/theme';
+import stations from '../constants/stations';
+import stationIndex from '../constants/stationIndex';
+import { SUN, MON, TUE, WED, THU, FRI, SAT } from '../constants/days';
+import fromNewYorkRoutes from '../assets/fromNewYorkRoutes';
+import toNewYorkRoutes from '../assets/toNewYorkRoutes';
+import { busToPrinceton, busToJunction } from '../assets/busSchedule';
 
 export const getASAPSchedule = (from, to, time = null) => {
   if (from === stations.PRINCETON) {
@@ -244,31 +241,6 @@ const getToPrincetonDaySchedule = (from, customDay = null) => {
   return schedules;
 }
 
-export const openScheduleDetail = (schedule) => {
-  const title = `${getTimeStr(schedule.first.schedule.from.departAt)} ~ ${getTimeStr(schedule.first.schedule.to.departAt)}`
-  Navigation.push('funjt.ScheduleScreen', {
-    component: {
-      name: 'funjt.ScheduleDetailScreen',
-      passProps: {
-        schedule: schedule
-      },
-      options: {
-        topBar: {
-          title: {
-            text: title,
-            color: THEME_WHITE,
-            alignment: 'center'
-          },
-          backButton: {
-            title: 'Back',
-            color: THEME_WHITE
-          }
-        }
-      }
-    }
-  });
-}
-
 export const getTimeStr = (timeInt) => {
   let hours = parseInt(timeInt/100);
   hours = `${hours % 12}`;
@@ -280,19 +252,6 @@ export const getTimeStr = (timeInt) => {
 
   return `${hours}:${minutes} ${AMPM}`;
 };
-
-export const getCustomLayoutSpring = () => ({
-  duration: 500,
-  create: {
-    type: LayoutAnimation.Types.spring,
-    property: LayoutAnimation.Properties.scaleXY,
-    springDamping: 0.7,
-  },
-  update: {
-    type: LayoutAnimation.Types.spring,
-    springDamping: 0.7
-  },
-});
 
 export const getTrainNumberFromSchedule = (schedule) => {
   const { first, second } = schedule;

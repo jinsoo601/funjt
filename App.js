@@ -7,11 +7,15 @@ import ScheduleScreen from './src/screens/Schedule/Schedule';
 import ScheduleDetailScreen from './src/screens/ScheduleDetail/ScheduleDetail';
 import StatusScreen from './src/screens/Status/Status';
 import DayScheduleScreen from './src/screens/DaySchedule/DaySchedule';
+import SettingScreen from './src/screens/Setting/Setting';
+import SettingButton from './src/components/SettingButton/SettingButton';
 
 Navigation.registerComponent('funjt.ScheduleScreen', () => ScheduleScreen);
 Navigation.registerComponent('funjt.StatusScreen', () => StatusScreen);
 Navigation.registerComponent('funjt.DayScheduleScreen', () => DayScheduleScreen);
 Navigation.registerComponent('funjt.ScheduleDetailScreen', () => ScheduleDetailScreen);
+Navigation.registerComponent('funjt.SettingScreen', () => SettingScreen);
+Navigation.registerComponent('funjt.SettingButton', () => SettingButton);
 
 Navigation.events().registerAppLaunchedListener(() => {
 	Promise.all([

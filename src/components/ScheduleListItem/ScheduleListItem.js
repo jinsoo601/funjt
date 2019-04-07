@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { THEME_BLACK, THEME_DISABLED } from '../UI/theme';
-import { getTimeStr, getDepartAtAndArrivalAt, getTrainNumberFromSchedule } from '../../screens/Schedule/scheduleUtil';
+import { getTimeStr, getDepartAtAndArrivalAt, getTrainNumberFromSchedule } from '../../util/scheduleUtil';
 
 const scheduleListItem = (props) => {
 	const { departAt, arriveAt } = getDepartAtAndArrivalAt(props.schedule);

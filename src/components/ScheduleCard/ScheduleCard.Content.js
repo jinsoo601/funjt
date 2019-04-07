@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../UI/theme';
-import { getTimeStr } from '../../screens/Schedule/scheduleUtil';
+import { getTimeStr } from '../../util/scheduleUtil';
 
 const getIconName = type => (type === 'TRAIN' ? 'train' : 'directions-bus');
 

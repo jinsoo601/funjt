@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View, FlatList, LayoutAnimation, NativeModules } from 'react-native';
+import { Text, View, FlatList, LayoutAnimation, NativeModules, AsyncStorage } from 'react-native';
 
 import styles from './Schedule.Style';
 import stations from '../../constants/stations';
@@ -9,13 +9,32 @@ import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
 import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
 import CollapseButton from '../../components/CollapseButton/CollapseButton';
-import { getASAPSchedule, getDaySchedule, openScheduleDetail, getCustomLayoutSpring, getTrainNumberFromSchedule } from './scheduleUtil';
+import SwapButton from '../../components/SwapButton/SwapButton';
+import { getASAPSchedule, getDaySchedule, getTrainNumberFromSchedule } from '../../util/scheduleUtil';
+import { getCustomLayoutSpring } from '../../util/layoutUtil';
+import { openScheduleDetail, openSettingScreen } from '../../util/navUtil';
 
 const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 const CustomLayoutSpring = getCustomLayoutSpring();
 
 class ScheduleScreen extends Component {
+  static options () {
+    return {
+      topBar: {
+        rightButtons: [{
+          id: 'openSetHomeScreen',
+          component: {
+            name: 'funjt.SettingButton',
+            passProps: {
+              onPress: () => openSettingScreen('funjt.ScheduleScreen')
+            }
+          }
+        }],
+      }
+    };
+  }
+
   state = {
     from: null,
     to: null,
@@ -24,6 +43,16 @@ class ScheduleScreen extends Component {
     collapsed: false,
     height: 238
   };
+
+  componentDidMount() {
+    AsyncStorage.getItem('funjt:Home')
+      .then(value => this.setState({ from: value }))
+      .catch(() => this.setState({ from: null }));
+
+    AsyncStorage.getItem('funjt:Work')
+      .then(value => this.setState({ to: value }))
+      .catch(() => this.setState({ to: null }));
+  }
 
   onGetSchedule = () => {
     if (!this.state.from || !this.state.to) return;
@@ -42,7 +71,7 @@ class ScheduleScreen extends Component {
     if (this.state.scheduleList.length === 1) {
       return <ScheduleCard schedule={info.item} />
     } else {
-      return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item)} />
+      return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item, 'funjt.ScheduleScreen')} />
     }
   }
 
@@ -54,6 +83,15 @@ class ScheduleScreen extends Component {
         collapsed: !prevState.collapsed,
         showFromDropdown: false,
         showToDropdown: false 
+      }
+    });
+  }
+
+  swap = () => {
+    this.setState(prevState => {
+      return {
+        from: prevState.to,
+        to: prevState.from
       }
     });
   }
@@ -79,6 +117,7 @@ class ScheduleScreen extends Component {
               collapsed={this.state.collapsed}
               iconName="arrow-drop-down"
             />
+            <SwapButton onPress={this.swap} />
             <ModeButton
               value={this.state.to || 'To'}
               onPress={() => this.setState(prevState => ({ showToDropdown: !prevState.showToDropdown }))}

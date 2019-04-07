@@ -1,33 +1,49 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { THEME_PRIMARY, THEME_WHITE } from '../UI/theme';
-import { getTimeStr } from '../../screens/Schedule/scheduleUtil';
+import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../UI/theme';
+import { getTimeStr } from '../../util/scheduleUtil';
+import { goToStatusScreen } from '../../util/navUtil';
 
-const scheduleCardHeader = props => (
-	<View style={styles.container}>
-		<Icon name="schedule" size={30} color={THEME_WHITE} style={styles.leftIcon} />
-		<View>
-			<Text style={styles.subText}>Departure: </Text>
-			<Text style={styles.text}>{getTimeStr(props.departAt)}</Text>
+const scheduleCardHeader = (props) => {
+	return (
+		<View style={[styles.row, styles.alignCenter, styles.container]}>
+			<View style={[styles.row, styles.alignCenter]}>
+				<Icon name="schedule" size={30} color={THEME_WHITE} style={styles.leftIcon} />
+				<View>
+					<Text style={styles.subText}>Departure: </Text>
+					<Text style={styles.text}>{getTimeStr(props.departAt)}</Text>
+				</View>
+				<Icon name="arrow-forward" size={15} color={THEME_WHITE} style={styles.middleIcon} />
+				<View>
+					<Text style={styles.subText}>Arrival: </Text>
+					<Text style={styles.text}>{getTimeStr(props.arriveAt)}</Text>
+				</View>
+			</View>
+			<TouchableOpacity onPress={goToStatusScreen} activeOpacity={0.6}>
+				<View style={[styles.statusButton, styles.alignCenter]}>
+					<Icon name="train" size={20} color={THEME_WHITE} />
+					<Text style={[styles.text, styles.buttonText]}>Status</Text>
+				</View>
+			</TouchableOpacity>
 		</View>
-		<Icon name="arrow-forward" size={15} color={THEME_WHITE} style={styles.middleIcon} />
-		<View>
-			<Text style={styles.subText}>Arrival: </Text>
-			<Text style={styles.text}>{getTimeStr(props.arriveAt)}</Text>
-		</View>
-	</View>
-);
+	);
+};
 
 const styles = StyleSheet.create({
 	container: {
-		flexDirection: 'row',
 		backgroundColor: THEME_PRIMARY,
-		alignItems: 'center',
 		padding: 7,
-		paddingLeft: 15
+		paddingLeft: 15,
+		justifyContent: 'space-between'
+	},
+	row: {
+		flexDirection: 'row'
+	},
+	alignCenter: {
+		alignItems: 'center'
 	},
 	text: {
 		color: THEME_WHITE,
@@ -37,6 +53,9 @@ const styles = StyleSheet.create({
 		color: THEME_WHITE,
 		fontSize: 12
 	},
+	buttonText: {
+		fontSize: 10
+	},
 	leftIcon: {
 		marginRight: 20
 	},
@@ -44,6 +63,11 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		marginRight: 10
 	},
+	statusButton: {
+		backgroundColor: THEME_SECONDARY,
+		borderRadius: 3,
+		padding: 5
+	}
 });
 
 export default scheduleCardHeader;
