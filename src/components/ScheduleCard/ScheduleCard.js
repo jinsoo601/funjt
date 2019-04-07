@@ -77,6 +77,7 @@ class ScheduleCard extends Component {
 					departAt={departAt}
 					arriveAt={arriveAt}
 					trainNumber={trainNumber}
+					screenId={this.props.screenId}
 				/>
 				<Content schedule={this.state.schedule} />
       </Animated.View>

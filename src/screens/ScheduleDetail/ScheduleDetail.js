@@ -7,7 +7,7 @@ class ScheduleDetailScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<ScheduleCard schedule={this.props.schedule} />
+				<ScheduleCard schedule={this.props.schedule} screenId={this.props.parentScreenId} />
 			</View>
 		);
 	}

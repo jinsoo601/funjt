@@ -69,7 +69,7 @@ class ScheduleScreen extends Component {
 
   renderListItem = (info) => {
     if (this.state.scheduleList.length === 1) {
-      return <ScheduleCard schedule={info.item} />
+      return <ScheduleCard schedule={info.item} screenId="funjt.ScheduleScreen" />
     } else {
       return <ScheduleListItem schedule={info.item} onPress={() => openScheduleDetail(info.item, 'funjt.ScheduleScreen')} />
     }
@@ -117,7 +117,7 @@ class ScheduleScreen extends Component {
               collapsed={this.state.collapsed}
               iconName="arrow-drop-down"
             />
-            <SwapButton onPress={this.swap} />
+            {!this.state.collapsed && <SwapButton onPress={this.swap} />}
             <ModeButton
               value={this.state.to || 'To'}
               onPress={() => this.setState(prevState => ({ showToDropdown: !prevState.showToDropdown }))}

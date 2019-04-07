@@ -109,7 +109,7 @@ class DayScheduleScreen extends Component {
               collapsed={this.state.collapsed}
               iconName="arrow-drop-down"
             />
-            <SwapButton onPress={this.swap} />
+            {!this.state.collapsed && <SwapButton onPress={this.swap} />}
             <ModeButton
               value={this.state.to || 'To'}
               onPress={() => this.setState(prevState => ({ showToDropdown: !prevState.showToDropdown }))}

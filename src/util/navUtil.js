@@ -8,7 +8,8 @@ export const openScheduleDetail = (schedule, parentScreenId) => {
     component: {
       name: 'funjt.ScheduleDetailScreen',
       passProps: {
-        schedule: schedule
+        schedule: schedule,
+        parentScreenId
       },
       options: {
         topBar: {
@@ -48,10 +49,26 @@ export const openSettingScreen = (parentScreenId) => {
   });
 }
 
-export const goToStatusScreen = () => {
-  Navigation.mergeOptions('funjt.ScheduleScreen', {
-    bottomTabs: {
-      currentTabIndex: 2
+export const goToStatusScreen = (parentScreenId, trainNumber) => {
+  Navigation.push(parentScreenId, {
+    component: {
+      name: 'funjt.StatusScreen',
+      passProps: {
+        trainNumber
+      },
+      options: {
+        topBar: {
+          title: {
+            text: 'Status',
+            color: THEME_WHITE,
+            alignment: 'center'
+          },
+          backButton: {
+            title: 'Back',
+            color: THEME_WHITE
+          }
+        }
+      }
     }
   });
 }

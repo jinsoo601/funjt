@@ -27,9 +27,15 @@ class StatusScreen extends Component {
   }
   
   state = {
-    trainNumber: null,
+    trainNumber: this.props.trainNumber || null,
     status: []
   };
+
+  componentDidMount() {
+    if (this.props.trainNumber) {
+      this.onCheckStatus();
+    }
+  }
 
   onChangeText = value => {
     this.setState({
