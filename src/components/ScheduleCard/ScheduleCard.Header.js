@@ -22,12 +22,15 @@ const scheduleCardHeader = (props) => {
 					<Text style={styles.text}>{getTimeStr(props.arriveAt)}</Text>
 				</View>
 			</View>
-			<TouchableOpacity onPress={() => goToStatusScreen(props.screenId, props.trainNumber)} activeOpacity={0.6}>
-				<View style={[styles.statusButton, styles.alignCenter]}>
-					<Icon name="train" size={20} color={THEME_WHITE} />
-					<Text style={[styles.text, styles.buttonText]}>Status</Text>
-				</View>
-			</TouchableOpacity>
+			{
+				!!props.trainNumber &&
+				<TouchableOpacity onPress={() => goToStatusScreen(props.screenId, props.trainNumber)} activeOpacity={0.6}>
+					<View style={[styles.statusButton, styles.alignCenter]}>
+						<Icon name="train" size={20} color={THEME_WHITE} />
+						<Text style={[styles.text, styles.buttonText]}>Status</Text>
+					</View>
+				</TouchableOpacity>
+			}
 		</View>
 	);
 };

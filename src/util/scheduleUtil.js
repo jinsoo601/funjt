@@ -19,6 +19,8 @@ export const getASAPSchedule = (from, to, time = null) => {
 
   // find a route that includes from and to
   const soonest = getSoonestTrainSchedule(routes, from, to, time || timeInt);
+  if (!soonest) return [];
+
   const schedule = {};
   schedule.first = {
     type: 'TRAIN',
@@ -29,11 +31,26 @@ export const getASAPSchedule = (from, to, time = null) => {
 }
 
 const getFromPrincetonASAPSchedule = (to, time = null) => {
-  const routes = initializeRoutes(stations.PRINCETON_JUNCTION, to);
   let { day, timeInt } = getDayAndTimeInt();
   const soonestBusToPrincetonJunction = getSoonestBusSchedule(busToJunction, day, time || timeInt);
+  if (to === stations.PRINCETON_JUNCTION) {
+    const { departAt, arriveAt } = soonestBusToPrincetonJunction;
+    return [{
+      first: {
+        type: 'BUS',
+        schedule: {
+          from: { station: stations.PRINCETON, departAt: departAt },
+          to: { station: stations.PRINCETON_JUNCTION, departAt: arriveAt }
+        }
+      },
+      key: 'BUS TO JUNCTION'
+    }]
+  };
+
   const busArrivalTime = soonestBusToPrincetonJunction.arriveAt;
+  const routes = initializeRoutes(stations.PRINCETON_JUNCTION, to);
   const soonestTrainToNewYork = getSoonestTrainSchedule(routes, stations.PRINCETON_JUNCTION, to, busArrivalTime);
+  if (!soonestTrainToNewYork) return [];
 
   const schedule = {
     first: {
@@ -53,15 +70,30 @@ const getFromPrincetonASAPSchedule = (to, time = null) => {
 }
 
 const getToPrincetonASAPSchedule = (from, time = null) => {
-  const routes = initializeRoutes(from, stations.PRINCETON_JUNCTION);
-  let { day, timeInt } = getDayAndTimeInt();
+  const { day, timeInt } = getDayAndTimeInt();
+  if (from === stations.PRINCETON_JUNCTION) {
+    const { departAt, arriveAt } = getSoonestBusSchedule(busToPrinceton, day, time || timeInt);
+    return [{
+      first: {
+        type: 'BUS',
+        schedule: {
+          from: { station: stations.PRINCETON, departAt: departAt },
+          to: { station: stations.PRINCETON_JUNCTION, departAt: arriveAt }
+        }
+      },
+      key: 'BUS TO PRINCETON'
+    }]
+  };
+
   /*
   schedule = {
     from: { station, departAt }, to: { station, departAt }, trainNumber
   }
   */
+  const routes = initializeRoutes(from, stations.PRINCETON_JUNCTION);
   const schedule = {};
   const soonestTrainToPrincetonJunction = getSoonestTrainSchedule(routes, from, stations.PRINCETON_JUNCTION,time || timeInt);
+  if (!soonestTrainToPrincetonJunction) return [];
   let trainArrivalTime = soonestTrainToPrincetonJunction.to.departAt;
   const soonestBusToPrinceton = getSoonestBusSchedule(busToPrinceton, day, trainArrivalTime);
 
@@ -82,6 +114,7 @@ const getToPrincetonASAPSchedule = (from, time = null) => {
 }
 
 const getSoonestTrainSchedule = (routes, from, to, timeInt) => {
+  if (timeInt < 0) return null;
   for (let i = 0; i < routes.length; i++) {
     const route = routes[i];
     const fromStation = route.routes.find(r => r.station === from);
@@ -181,15 +214,18 @@ export const getDaySchedule = (from, to, day = null) => {
 
 const getFromPrincetonDaySchedule = (to, customDay = null) => {
   const { day, timeInt } = getDayAndTimeInt();
-  const schedules = busToJunction[customDay === null ? day : customDay].map(schedule => ({
+  const schedules = busToJunction[customDay === null ? day : customDay].map((schedule, idx) => ({
     first: {
       type: 'BUS',
       schedule: {
         from: { station: stations.PRINCETON, departAt: schedule.departAt },
         to: { station: stations.PRINCETON_JUNCTION, departAt: schedule.arriveAt }
       }
-    }
+    },
+    key: `BUS-${idx}`
   }));
+  if (to === stations.PRINCETON_JUNCTION) return schedules;
+
   const routes = initializeRoutes(stations.PRINCETON_JUNCTION, to, customDay);
   schedules.forEach(schedule => {
     const busArrivalTime = schedule.first.schedule.to.departAt;
@@ -199,13 +235,28 @@ const getFromPrincetonDaySchedule = (to, customDay = null) => {
     };
     schedule.key = `${Math.random()}`
   });
+  if (!schedules[0].second.schedule) return [];
 
   return schedules;
 }
 
 const getToPrincetonDaySchedule = (from, customDay = null) => {
-  const routes = initializeRoutes(from, stations.PRINCETON_JUNCTION, customDay);
   const { day } = getDayAndTimeInt();
+  if (from === stations.PRINCETON_JUNCTION) {
+    const schedules = busToPrinceton[customDay === null ? day : customDay].map((schedule, idx) => ({
+      first: {
+        type: 'BUS',
+        schedule: {
+          from: { station: stations.PRINCETON_JUNCTION, departAt: schedule.departAt },
+          to: { station: stations.PRINCETON, departAt: schedule.arriveAt }
+        }
+      },
+      key: `BUS-${idx}`
+    }));
+    return schedules;
+  }
+
+  const routes = initializeRoutes(from, stations.PRINCETON_JUNCTION, customDay);
   let schedules = [];
   for (let i = 0; i < routes.length; i++) {
     const route = routes[i];
@@ -256,6 +307,7 @@ export const getTimeStr = (timeInt) => {
 export const getTrainNumberFromSchedule = (schedule) => {
   const { first, second } = schedule;
   if (first.type === 'TRAIN') return `#${first.schedule.trainNumber}`;
+  if (!second) return '';
   return `#${second.schedule.trainNumber}`;
 }
 

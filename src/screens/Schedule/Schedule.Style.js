@@ -34,6 +34,14 @@ const styles = StyleSheet.create({
   dropdowns: {
     position: 'absolute',
     top: 110
+  },
+  errorContainer: {
+    margin: 30,
+  },
+  errorMessage: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: THEME_PRIMARY
   }
 });
 

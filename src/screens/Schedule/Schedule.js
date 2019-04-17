@@ -38,10 +38,11 @@ class ScheduleScreen extends Component {
   state = {
     from: null,
     to: null,
-    scheduleType: null,
+    scheduleType: 'ASAP',
     scheduleList: [],
     collapsed: false,
-    height: 238
+    height: 238,
+    showEmptyState: false
   };
 
   componentDidMount() {
@@ -64,7 +65,7 @@ class ScheduleScreen extends Component {
       scheduleList = getDaySchedule(this.state.from, this.state.to);
     }
 
-    this.setState({ scheduleList });
+    this.setState({ scheduleList, showEmptyState: !scheduleList.length });
   }
 
   renderListItem = (info) => {
@@ -150,11 +151,19 @@ class ScheduleScreen extends Component {
             />
           </View>
         </View>
-        <FlatList
-          data={this.state.scheduleList}
-          renderItem={this.renderListItem}
-          scrollEnabled={this.state.scheduleList.length > 1}
-        />
+        {
+          this.state.showEmptyState ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorMessage}>There is no route for given origin and destination.</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={this.state.scheduleList}
+              renderItem={this.renderListItem}
+              scrollEnabled={this.state.scheduleList.length > 1}
+            />
+          )
+        }
         <View style={[styles.row, styles.dropdowns]}>
           {
             this.state.showFromDropdown ? (
