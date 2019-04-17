@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, FlatList, LayoutAnimation, NativeModules, AsyncStorage } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 
 import styles from './Schedule.Style';
 import stations from '../../constants/stations';
@@ -46,6 +47,10 @@ class ScheduleScreen extends Component {
   };
 
   componentDidMount() {
+    this.navigationEventListener = Navigation.events().bindComponent(this);
+  }
+
+  componentDidAppear() {
     AsyncStorage.getItem('funjt:Home')
       .then(value => this.setState({ from: value }))
       .catch(() => this.setState({ from: null }));

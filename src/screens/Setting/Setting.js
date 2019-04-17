@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 
 import stations from '../../constants/stations';
 import ModeButton from '../../components/ModeButton/ModeButton';
@@ -29,6 +30,7 @@ class SettingScreen extends Component {
     if (!this.state.home || !this.state.work) return;
     AsyncStorage.setItem('funjt:Home', this.state.home);
     AsyncStorage.setItem('funjt:Work', this.state.work);
+    Navigation.pop(this.props.componentId);
   }
 
   render() {
