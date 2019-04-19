@@ -47,10 +47,6 @@ class ScheduleScreen extends Component {
   };
 
   componentDidMount() {
-    this.navigationEventListener = Navigation.events().bindComponent(this);
-  }
-
-  componentDidAppear() {
     AsyncStorage.getItem('funjt:Home')
       .then(value => this.setState({ from: value }))
       .catch(() => this.setState({ from: null }));
@@ -59,7 +55,7 @@ class ScheduleScreen extends Component {
       .then(value => this.setState({ to: value }))
       .catch(() => this.setState({ to: null }));
   }
-
+  
   onGetSchedule = () => {
     if (!this.state.from || !this.state.to) return;
     let scheduleList = null;
