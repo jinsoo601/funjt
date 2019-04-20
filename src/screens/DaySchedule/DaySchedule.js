@@ -13,6 +13,7 @@ import ScheduleCard from '../../components/ScheduleCard/ScheduleCard';
 import ScheduleListItem from '../../components/ScheduleListItem/ScheduleListItem';
 import CollapseButton from '../../components/CollapseButton/CollapseButton';
 import SwapButton from '../../components/SwapButton/SwapButton';
+import HolidayWarning from '../../components/HolidayWarning/HolidayWarning';
 import { getDaySchedule, getTrainNumberFromSchedule } from '../../util/scheduleUtil';
 import { getCustomLayoutSpring } from '../../util/layoutUtil';
 import { openScheduleDetail, openSettingScreen } from '../../util/navUtil';
@@ -111,6 +112,7 @@ class DayScheduleScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <HolidayWarning />
         <View style={styles.collapseButtonContainer}>
           <CollapseButton 
             collapsed={this.state.collapsed}
