@@ -333,7 +333,7 @@ export const getNextSchedule = (schedule) => {
   if (schedules[schedules.length - 1].first.schedule.from.departAt === originalDepartAt) return schedule;
 
   let nextSchedule = schedule;
-  for (let i = 1; i < schedules.length; i++) {
+  for (let i = 0; i < schedules.length - 1; i++) {
     if (schedules[i].first.schedule.from.departAt === originalDepartAt) {
       nextSchedule = schedules[i + 1];
     }
