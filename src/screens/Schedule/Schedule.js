@@ -47,15 +47,34 @@ class ScheduleScreen extends Component {
   };
 
   componentDidMount() {
+    this.navigationEventListener = Navigation.events().bindComponent(this);
     AsyncStorage.getItem('funjt:Home')
-      .then(value => this.setState({ from: value }))
-      .catch(() => this.setState({ from: null }));
+      .then(value => this.setState({ from: value, asyncFrom: value }))
+      .catch(() => this.setState({ from: null, asyncFrom: null }));
 
     AsyncStorage.getItem('funjt:Work')
-      .then(value => this.setState({ to: value }))
-      .catch(() => this.setState({ to: null }));
+      .then(value => this.setState({ to: value, asyncTo: value }))
+      .catch(() => this.setState({ to: null, asyncTo: null }));
   }
-  
+
+  componentDidAppear() {
+    AsyncStorage.getItem('funjt:Home')
+      .then(value => {
+        if (value !== this.state.asyncFrom) {
+          this.setState({ from: value, asyncFrom: value });
+        }
+      })
+      .catch(err => console.log(err));
+
+    AsyncStorage.getItem('funjt:Work')
+      .then(value => {
+        if (value !== this.state.asyncTo) {
+          this.setState({ to: value, asyncTo: value });
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
   onGetSchedule = () => {
     if (!this.state.from || !this.state.to) return;
     let scheduleList = null;

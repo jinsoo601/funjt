@@ -167,6 +167,7 @@ const getDayAndTimeInt = () => {
   let day = now.getDay();
   let timeInt = getTimeInt(now);
   if (now.getHours() < 3) {
+    day = day - 1 < 0 ? 6 : day - 1;
     timeInt += 2400;
   }
   return { day, timeInt };

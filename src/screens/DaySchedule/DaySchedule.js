@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View, FlatList, LayoutAnimation, NativeModules, AsyncStorage } from 'react-native';
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
+import { Navigation } from 'react-native-navigation';
 
 import { THEME_PRIMARY } from '../../components/UI/theme';
 import styles from '../Schedule/Schedule.Style';
@@ -47,6 +48,7 @@ class DayScheduleScreen extends Component {
   };
 
   componentDidMount() {
+    this.navigationEventListener = Navigation.events().bindComponent(this);
     AsyncStorage.getItem('funjt:Home')
       .then(value => this.setState({ from: value }))
       .catch(() => this.setState({ from: null }));
@@ -54,6 +56,24 @@ class DayScheduleScreen extends Component {
     AsyncStorage.getItem('funjt:Work')
       .then(value => this.setState({ to: value }))
       .catch(() => this.setState({ to: null }));
+  }
+
+  componentDidAppear() {
+    AsyncStorage.getItem('funjt:Home')
+      .then(value => {
+        if (value !== this.state.asyncFrom) {
+          this.setState({ from: value, asyncFrom: value });
+        }
+      })
+      .catch(err => console.log(err));
+
+    AsyncStorage.getItem('funjt:Work')
+      .then(value => {
+        if (value !== this.state.asyncTo) {
+          this.setState({ to: value, asyncTo: value });
+        }
+      })
+      .catch(err => console.log(err));
   }
 
   onGetSchedule = () => {

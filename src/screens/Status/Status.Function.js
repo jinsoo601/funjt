@@ -32,5 +32,6 @@ const getStatus = val => {
 	else if (val.includes('ALL ABOARD')) status = 'All Aboard';
 	else if (val.includes('BOARDING')) status = 'Boarding';
 	else if (val.includes('CANCELLED')) status = 'Cancelled';
+	else if (val.includes('STAND BY')) status = 'Stand By';
 	return status;
 }
