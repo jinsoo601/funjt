@@ -47,7 +47,6 @@ class ScheduleCard extends Component {
 	}
 
 	getNextSchedule = () => {
-		if (this.state.schedule.first.schedule.departAt > 2300) return;
 		this.setState(prevState => ({
 			schedule: getNextSchedule(prevState.schedule)
 		}));

@@ -331,11 +331,14 @@ export const getNextSchedule = (schedule) => {
   const originalDepartAt = schedule.first.schedule.from.departAt;
   const schedules = getDaySchedule(fromStation, toStation);
   if (schedules[schedules.length - 1].first.schedule.from.departAt === originalDepartAt) return schedule;
+
+  let nextSchedule = schedule;
   for (let i = 1; i < schedules.length; i++) {
     if (schedules[i].first.schedule.from.departAt === originalDepartAt) {
-      return schedules[i + 1]
+      nextSchedule = schedules[i + 1];
     }
   }
+  return nextSchedule;
 }
 
 export const getPrevSchedule = (schedule) => {
@@ -344,9 +347,12 @@ export const getPrevSchedule = (schedule) => {
   const originalDepartAt = schedule.first.schedule.from.departAt;
   const schedules = getDaySchedule(fromStation, toStation);
   if (schedules[0].first.schedule.from.departAt === originalDepartAt) return schedule;
+
+  let prevSchedule = schedule;
   for (let i = 1; i < schedules.length; i++) {
     if (schedules[i].first.schedule.from.departAt === originalDepartAt) {
-      return schedules[i - 1]
+      prevSchedule = schedules[i - 1];
     }
   }
+  return prevSchedule;
 }
