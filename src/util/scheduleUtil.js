@@ -328,8 +328,14 @@ export const getDepartAtAndArrivalAt = (schedule) => {
 export const getNextSchedule = (schedule) => {
   const fromStation = schedule.first.schedule.from.station;
   const toStation = (schedule.second || schedule.first).schedule.to.station;
-  const time = schedule.first.schedule.from.departAt;
-  return getASAPSchedule(fromStation, toStation, time + 1)[0]
+  const originalDepartAt = schedule.first.schedule.from.departAt;
+  const schedules = getDaySchedule(fromStation, toStation);
+  if (schedules[schedules.length - 1].first.schedule.from.departAt === originalDepartAt) return schedule;
+  for (let i = 1; i < schedules.length; i++) {
+    if (schedules[i].first.schedule.from.departAt === originalDepartAt) {
+      return schedules[i + 1]
+    }
+  }
 }
 
 export const getPrevSchedule = (schedule) => {
