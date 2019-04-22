@@ -2166,11 +2166,11 @@ const trainRoutes = [
       { station: stations.NEW_BRUNSWICK, departAt: 1849 },
       { station: stations.EDISON, departAt: 1854 },
       { station: stations.METUCHEN, departAt: 1859 },
-      { station: stations.METROPARK, departAt: 1704 },
-      { station: stations.NEWARK_AIRPORT, departAt: 1719 },
-      { station: stations.NEWARK_PENN, departAt: 1728 },
-      { station: stations.SECAUCUS, departAt: 1735 },
-      { station: stations.NEW_YORK, departAt: 1748 }
+      { station: stations.METROPARK, departAt: 1904 },
+      { station: stations.NEWARK_AIRPORT, departAt: 1919 },
+      { station: stations.NEWARK_PENN, departAt: 1928 },
+      { station: stations.SECAUCUS, departAt: 1935 },
+      { station: stations.NEW_YORK, departAt: 1948 }
     ]
   },
   {
