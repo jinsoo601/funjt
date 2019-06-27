@@ -7,13 +7,14 @@ import { THEME_PRIMARY, THEME_SECONDARY, THEME_WHITE } from '../UI/theme';
 import { getTimeStr } from '../../util/scheduleUtil';
 
 const getIconName = type => (type === 'TRAIN' ? 'train' : 'directions-bus');
+const getTypeStr = type => (type === 'TRAIN' ? 'TRAIN' : 'DINKY');
 
 const scheduleCardContent = ({ schedule }) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Icon name={getIconName(schedule.first.type)} size={20} color={'black'} />
-				<Text style={styles.typeText}>{schedule.first.type}</Text>
+				<Text style={styles.typeText}>{getTypeStr(schedule.first.type)}</Text>
 				<Text style={styles.description}>
 					{` ${schedule.first.schedule.from.station} to ${schedule.first.schedule.to.station}`}
 				</Text>
@@ -28,7 +29,7 @@ const scheduleCardContent = ({ schedule }) => {
 					<React.Fragment>
 						<View style={styles.header}>
 							<Icon name={getIconName(schedule.second.type)} size={20} color={'black'} />
-							<Text style={styles.typeText}>{schedule.second.type}</Text>
+							<Text style={styles.typeText}>{getTypeStr(schedule.second.type)}</Text>
 							<Text style={styles.description}>
 								{` ${schedule.second.schedule.from.station} to ${schedule.second.schedule.to.station}`}
 							</Text>
